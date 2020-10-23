@@ -1,8 +1,21 @@
-package com.trying;
-import java.util.Scanner;
-class validcc
-{
-	public static int size(long ccno)
+import java.util.*;
+
+class ExitSystem{
+  int bill;
+  
+  void DeleteDetailsFromDatabase(){}
+  
+  void changeStatusOfParkingSpot(){}
+  
+  void showbill(int time){
+    int factor; 
+    //assign the value to variable bill
+  }
+  
+   
+  
+  //card validation:
+  public static int size(long ccno)
 	{
 		long temp=ccno;
 		int sum=0;
@@ -57,20 +70,16 @@ class validcc
 		}
 		return sum;
 	}
-	public static boolean isvalidccno(long ccno)
+	public static boolean IscardValid(long ccno)
 	{
 		return (size(ccno) >= 13 && size(ccno) <= 16 )&& match(ccno)
 				&& ((evendoublesum(ccno) + oddsum(ccno)) % 10 == 0);
 	}
-}
-/*The valid pin code of India must satisfy the following conditions.
-1.It can be only six digits.
-2.It should not start with zero.
-3.First digit of the pin code must be from 1 to 9.
-4.Next five digits of the pin code may range from 0 to 9.*/
-class validpin extends validcc
-{
-	public static int sizeof(int pin)
+  
+  
+  
+  //pin validation:
+  public static int sizeof(int pin)
 	{
 		int temp=pin;
 		int sum=0;
@@ -98,117 +107,85 @@ class validpin extends validcc
 		return(a[0]!=0);
 	}
 	
-	public static boolean isvalidpin(int pin)
+	public static boolean IsPinValid(int pin)
 	{
 		return(sizeof(pin)==6&&startdigit(pin));
 	}
-}
-class paymentmodule extends validpin
-{
-	public static int pricing(String vehicletype,int time)
-	{
-		int x=0;
-		if(vehicletype.equalsIgnoreCase("car") )
-		{
-			if(time<=1)
-	    		x=20;
-	    	else if(time>1&&time<=3)
-	            x=20+10*(time-1);
-	    	else
-	    		x=20+10*2+5*(time-3);
-		}
-		else if(vehicletype.equalsIgnoreCase("electric car") )
-		{
-			if(time<=1)
-	    		x=30;
-	    	else if(time>1&&time<=3)
-	            x=30+20*(time-1);
-	    	else
-	    		x=30+20*2+10*(time-3);
-		}
-		else if(vehicletype.equalsIgnoreCase("truck") )
-		{
-			if(time<=1)
-	    		x=25;
-	    	else if(time>1&&time<=3)
-	            x=25+20*(time-1);
-	    	else
-	    		x=25+20*2+10*(time-3);
-		}
-		else if(vehicletype.equalsIgnoreCase("van") )
-		{
-			if(time<=1)
-	    		x=20;
-	    	else if(time>1&&time<=3)
-	            x=20+10*(time-1);
-	    	else
-	    		x=20+10*2+5*(time-3);
-		}
-		else if(vehicletype.equalsIgnoreCase("motor cycle") )
-		{
-			if(time<=1)
-	    		x=15;
-	    	else if(time>1&&time<=3)
-	            x=10+7*(time-1);
-	    	else
-	    		x=15+10*2+7*(time-3);
-		}
-		else
-			System.out.println("invalid input!!");
-		return x;
-	}
-    public static void payment(String vehicletype,int time) 
-    {
-    	Scanner sc=new Scanner(System.in);
-    	System.out.println("Choose one thing:");
-    	System.out.println("1.cash");
-    	System.out.println("2.card");
-    	int n=sc.nextInt();
-    	int attempt = 3;
-    	int x=pricing(vehicletype,time);
-        if(n==2)
-    	{
-    		System.out.println("Please enter ccno:");
-    		long ccno=sc.nextLong();
-    		int pin;
-    		if(isvalidccno(ccno))
-    		{
-    			System.out.println("please enter pin:");
-    			pin=sc.nextInt();
-    			if(isvalidpin(pin))
-    			{
-    				System.out.println("Your payment is successful!!");
-    				System.out.println("you are charged"+x+"rupees");
-    			}
-    			while(!isvalidpin(pin)&&attempt!=0)
-    			{
-    				System.out.println("Invalid PIN entered!. " + --attempt + " attempts remaining.");
-    				if(attempt!=0)
-    				{
-    					System.out.println("please enter pin again:");
-                        pin=sc.nextInt();
-            			if(isvalidpin(pin))
-            			{
-            				System.out.println("Your payment is successful!!");
-            				System.out.println("you are charged"+ x+"rupees");
-            				System.out.println("Thanks for using group 10 parkinglot");
-            			}
-    				}
-    				else
-    				{
-    	                System.out.println("your card has locked!");
-    	                break;
-                    }
-    		    }
-    		}
-    		else
-    			System.out.println("Invalid creditcard number!!try again");
-    	 }
-    	else
-    	{
-    		System.out.println("please pay"+ x+"rupees");	
-    		System.out.println("Thanks for using group 10 parkinglot");
-    	}
+  
+  
+  
+  
+  //database ...?
+  
+  
+  
+
+  // payment done by using a card
+  void cardPayment(){
+        Scanner sc= new Scanner(System.in);
+    System.out.println("please enter your card number:");
+    while(1){   
+       int cardNumber=  sc.nextInt();
+        
+       if(cardIsValid(cardNumber)){
+         break;
+        }
+      else{
+        System.out.println("Please enter valid card number");
+      } 
+    }
+	  
+    while(1){
+    
+    System.out.println("please enter pin:");
+    while(1){   
+       int PinNumber=  sc.nextInt();
+        
+       if(IsPinValid(PinNumber)){
+         break;
+        }
+      else{
+        System.out.println("Please enter valid pin:");
+      } 
+    }
+        
+    System.out.println("Redirecting to your bank gateway...");
+      
+     if(dummyRandomBank()){
+       System.out.println("Transaction successful! Have a great day!");
+       break;
      }
+    while(!dummyRandomBank()){
+       System.out.println("Transaction unsuccessful. Please try again.");
+    }
+  }
+    //Adding randomness to ver
+    boolean dummyRandomBank(){
+        double randomNum = ThreadLocalRandom.current().nextDouble();
+        if(randomNum>=0.98){
+            return false;
+        }
+        return true;
+    }
+  
+  }
 }
 
+class ParkingAttendant extends ExitSystem{
+  
+  void cashPayment(double amount){
+        if(bill == amount){
+            System.out.println("Have a great day!");
+        }
+        else if(bill>amount){
+            System.out.println("An amount of " + (bill - amount) + "must be paid");
+        }
+        else{
+            System.out.println("Here's your change : " + (amount - bill));
+            System.out.println("Have a great day!");
+        }
+    }
+  
+    //other tasks that the attendant has to perform?
+  
+}
