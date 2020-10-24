@@ -1,4 +1,4 @@
-package com.trying;
+
 import java.util.Scanner;
 class validcc
 {
