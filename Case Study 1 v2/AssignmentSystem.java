@@ -3,13 +3,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.regex.*;
 
 public class AssignmentSystem {
     private DisplayBoard entranceBoard = new DisplayBoard();
     private double[] carPrices = { 20, 10, 5 };
     private double[] bikePrices = { 10, 5, 5 };
     private double[] evPrices = { 50, 25, 15 };
-    // private double[] truckPrices = { 0, 0, 0 };
+    // private double[] truckPrices = { 0, 0, 0 }; assuming the trucks don't have to pay for parking because they're used to deliver supplies
     private static int floors = 5;
     private ParkingFloor[] parkingFloors;
 
@@ -51,26 +52,36 @@ public class AssignmentSystem {
     }
 
     public void assignSpot(String vehicleType) {
+        Pattern vehiclePattern = Pattern.compile("^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$");
+        Pattern phonePattern = Pattern.compile("\\d\\d\\d([,\\s])?\\d\\d\\d\\d");
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your name: ");
         String name = scanner.next();
         System.out.print("Enter the vehicle number: ");
         String vehicleNumber = scanner.next();
+        while (!vehiclePattern.matcher(vehicleNumber).matches()) {
+            System.out.println("Please enter a valid vehicle number: ");
+            vehicleNumber = scanner.next();
+        }
         long entry = System.currentTimeMillis();
-        System.out.print("Enter your phone number: ");
         String phone = scanner.next();
+        while (!phonePattern.matcher(phone).matches()) {
+            System.out.println("Please enter a valid mobile number: ");
+            phone = scanner.next();
+        }
         scanner.close();
+
         for (int floor = 0; floor < floors; floor++) {
             for (int j = 0; j < parkingFloors[floor].totalNumSpots(); j++) {
                 if (vehicleType.toLowerCase() == "bike")
                     for (int k = 0; k < parkingFloors[floor].numBikeSpots; k++) {
                         if (!parkingFloors[floor].bikeSpots[k].isOccupied) {
+
                             recordDetails(name, vehicleNumber, entry, phone);
                             parkingFloors[floor].bikeSpots[k].assignSpot(entry);
                             System.out.println(
                                     "You have been assigned " + "Floor Number " + floor + 1 + " Spot number " + k + 1);
-                                    System.out.println(
-                                    "Your parking ID is: " + entry);
+                            System.out.println("Your parking ID is: " + entry);
                             return;
                         } else {
                             System.out.println("Sorry, the lot is full!");
@@ -83,8 +94,7 @@ public class AssignmentSystem {
                             parkingFloors[floor].carSpots[k].assignSpot(entry);
                             System.out.println(
                                     "You have been assigned " + "Floor Number " + floor + 1 + " Spot number " + k + 1);
-                            System.out.println(
-                                    "Your parking ID is: " + entry);
+                            System.out.println("Your parking ID is: " + entry);
                             return;
                         } else {
                             System.out.println("Sorry, the lot is full!");
@@ -97,8 +107,7 @@ public class AssignmentSystem {
                             parkingFloors[floor].truckSpots[k].assignSpot(entry);
                             System.out.println(
                                     "You have been assigned " + "Floor Number " + floor + 1 + " Spot number " + k + 1);
-                            System.out.println(
-                                    "Your parking ID is: " + entry);
+                            System.out.println("Your parking ID is: " + entry);
                             return;
                         } else {
                             System.out.println("Sorry, the lot is full!");
@@ -111,8 +120,7 @@ public class AssignmentSystem {
                             parkingFloors[floor].handicappedSpots[k].assignSpot(entry);
                             System.out.println(
                                     "You have been assigned " + "Floor Number " + floor + 1 + " Spot number " + k + 1);
-                            System.out.println(
-                                    "Your parking ID is: " + entry);
+                            System.out.println("Your parking ID is: " + entry);
                             return;
                         } else {
                             System.out.println("Sorry, the lot is full!");
@@ -135,6 +143,8 @@ public class AssignmentSystem {
         // assignmentSystem.entranceBoard.displayMessage("Have a great day!");
         // assignmentSystem.entranceBoard.idleMessage();
         // }
+
+        //dummy lines while development
         assignmentSystem.initalizeFloors(floors);
         assignmentSystem.assignSpot("bike");
         System.out.println(assignmentSystem.parkingFloors[0].handicappedSpots[0].isOccupied);
