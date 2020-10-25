@@ -36,4 +36,12 @@ public class Admin {
     public void initializeFloors(AssignmentSystem assignmentSystem){
         assignmentSystem.initalizeFloors(masterKey);
     }
+
+    public void initializeDefaultFloor(AssignmentSystem assignmentSystem, int numFloors){
+        assignmentSystem.defaultFloor(floorKey, numFloors);
+    }
+
+    public void initializeGroundFloor(AssignmentSystem assignmentSystem){
+        assignmentSystem.groundFloor(floorKey);
+    }
 }

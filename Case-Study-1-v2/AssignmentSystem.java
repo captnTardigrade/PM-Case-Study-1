@@ -7,14 +7,14 @@ import java.util.regex.*;
 
 public class AssignmentSystem {
     private String masterKey = "topSecret";
-    private DisplayBoard entranceBoard = new DisplayBoard();
+    protected DisplayBoard entranceBoard = new DisplayBoard();
     private double[] carPrices = { 20, 10, 5 };
     private double[] bikePrices = { 10, 5, 5 };
     private double[] evPrices = { 50, 25, 15 };
     private double[] truckPrices = { 0, 0, 0 }; // assuming the trucks don't have to pay for parking because they're
                                                 // used to deliver supplies
-    private ParkingFloor[] parkingFloors;
-    private int numFloors;
+    private int numFloors = 5;
+    private ParkingFloor[] parkingFloors = new ParkingFloor[numFloors];
 
     public void showPrices() {
         entranceBoard.displayMessage("\nCar parking prices");
@@ -58,30 +58,50 @@ public class AssignmentSystem {
         }
     }
 
-    public void groundFloor() {
-        ParkingFloor parkingFloor = new ParkingFloor();
-        for (int i = 0; i < 10; i++) {
-            parkingFloor.truckSpots[i] = new ParkingSpot(4, truckPrices);
-        }
-        for (int i = 0; i < 5; i++) {
-            parkingFloor.handicappedSpots[i] = new ParkingSpot(2, carPrices);
-        }
-        for (int i = 0; i < 12; i++) {
-            parkingFloor.carSpots[i] = new ParkingSpot(2, carPrices);
-        }
-        for (int i = 0; i < 26; i++) {
-            parkingFloor.bikeSpots[i] = new ParkingSpot(1, bikePrices);
-        }
+    public void groundFloor(String floorKey) {
+        
     }
 
-    public void defaultFloor(String floorKey) {
-        ParkingFloor parkingFloor = new ParkingFloor();
-        for (int i = 0; i < 100; i++) {
-            parkingFloor.bikeSpots[i] = new ParkingSpot(1, bikePrices);
+    public void defaultFloor(String floorKey, int floors) {
+        parkingFloors = new ParkingFloor[floors];
+        int groundNumTruckSpots = 10;
+        int groundNumEVSpots = 5;
+        int groundNumHandicappedSpots = 5;
+        int groundNumCarSpots = 10;
+        int groundNumBikeSpots = 20;
 
+        parkingFloors[0] = new ParkingFloor();
+
+        parkingFloors[0].initializeBikeSpots(groundNumBikeSpots);
+        parkingFloors[0].initializeCarSpots(groundNumCarSpots);
+        parkingFloors[0].initializeTruckSpots(groundNumTruckSpots);
+        parkingFloors[0].initializeHandicappedSpots(groundNumHandicappedSpots);
+        parkingFloors[0].initializeEVSpots(groundNumEVSpots);
+
+        if (this.masterKey == floorKey) {
+            for (int i = 0; i < groundNumTruckSpots; i++) {
+                parkingFloors[0].truckSpots[i] = new ParkingSpot(4, truckPrices);
+            }
+            for (int i = 0; i < groundNumHandicappedSpots; i++) {
+                parkingFloors[0].handicappedSpots[i] = new ParkingSpot(2, carPrices);
+            }
+            for (int i = 0; i < groundNumCarSpots; i++) {
+                parkingFloors[0].carSpots[i] = new ParkingSpot(2, carPrices);
+            }
+            for (int i = 0; i < groundNumBikeSpots; i++) {
+                parkingFloors[0].bikeSpots[i] = new ParkingSpot(1, bikePrices);
+            }
+            for (int i = 0; i < groundNumEVSpots; i++) {
+                parkingFloors[0].bikeSpots[i] = new ParkingSpot(1, bikePrices);
+            }
         }
-        for (int i = 0; i < 50; i++) {
-            parkingFloor.carSpots[i] = new ParkingSpot(2, carPrices);
+
+        for (int i = 1; i < floors; i++) {
+            parkingFloors[i] = new ParkingFloor();
+            int numBikeSpots = 100;
+            parkingFloors[i].initializeBikeSpots(numBikeSpots);
+            int numCarSpots = 50;
+            parkingFloors[i].initializeCarSpots(numCarSpots);
         }
     }
 
@@ -113,15 +133,33 @@ public class AssignmentSystem {
         }
     }
 
-    public ParkingSpot getSpot(int floor, int spot, String vehicleType) {
-        if (vehicleType.equals("car")) {
-            return parkingFloors[floor - 1].carSpots[spot - 1];
-        } else if (vehicleType.equals("bike")) {
-            return parkingFloors[floor - 1].bikeSpots[spot - 1];
-        } else if (vehicleType.equals("truck")) {
-            return parkingFloors[floor - 1].truckSpots[spot - 1];
-        } else if (vehicleType.equals("handicapped")) {
-            return parkingFloors[floor - 1].handicappedSpots[spot - 1];
+    public ParkingSpot getSpot(long id) {
+        for (int floor = 0; floor < numFloors; floor++) {
+            for (int spot = 0; spot < parkingFloors[floor].numBikeSpots; spot++) {
+                if(id == parkingFloors[floor].bikeSpots[spot].id){
+                    return parkingFloors[floor].bikeSpots[spot];
+                }
+            }
+            for (int spot = 0; spot < parkingFloors[floor].numCarSpots; spot++) {
+                if(id == parkingFloors[floor].carSpots[spot].id){
+                    return parkingFloors[floor].carSpots[spot];
+                }
+            }
+            for (int spot = 0; spot < parkingFloors[floor].numTruckSpots; spot++) {
+                if(id == parkingFloors[floor].truckSpots[spot].id){
+                    return parkingFloors[floor].truckSpots[spot];
+                }
+            }
+            for (int spot = 0; spot < parkingFloors[floor].numHandicappedSpots; spot++) {
+                if(id == parkingFloors[floor].handicappedSpots[spot].id){
+                    return parkingFloors[floor].handicappedSpots[spot];
+                }
+            }
+            for (int spot = 0; spot < parkingFloors[floor].numEVSpots; spot++) {
+                if(id == parkingFloors[floor].evSpots[spot].id){
+                    return parkingFloors[floor].evSpots[spot];
+                }
+            }
         }
         return null;
     }
@@ -158,7 +196,7 @@ public class AssignmentSystem {
                             System.out.println("Your parking ID is: " + entry);
                             return;
                         }
-                        System.out.println("Sorry the lot is full!");
+                        System.out.println("Sorry, the lot is full!");
                         return;
                     }
                 } else if (vehicleType.equals("car")) {
@@ -199,8 +237,7 @@ public class AssignmentSystem {
                                     "You have been assigned " + "FLOOR NUMBER " + floor + 1 + " SPOT NUMBER " + k + 1);
                             System.out.println("Your parking ID is: " + entry);
                             return;
-                        }
-                        else if (!parkingFloors[floor].carSpots[k].isOccupied){
+                        } else if (!parkingFloors[floor].carSpots[k].isOccupied) {
                             recordDetails(name, vehicleNumber, entry, phone);
                             dummyBalanceGenerator(entry);
                             parkingFloors[floor].handicappedSpots[k].assignSpot(entry);

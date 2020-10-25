@@ -1,5 +1,8 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -34,23 +37,24 @@ public class BankTen implements Bank {
 
     @Override
     public boolean hasEnoughBalance(long id, double bill) {
-        boolean found = false;
-        double balance = 0;
-        long ID;
-        Scanner scanner;
-
         try {
-            scanner = new Scanner(new File("Bank.csv"));
-            scanner.useDelimiter("[,\n]");
-            while (scanner.hasNext() && !found) {
-                ID = scanner.nextLong();
-                balance = scanner.nextDouble();
-                if(ID == id){
-                    if(balance>=bill){
-                        return true;
+            String currentLine;
+            FileReader fr = new FileReader("./Bank.csv");
+            BufferedReader br = new BufferedReader(fr);
+
+            try {
+                while ((currentLine = br.readLine()) != null) {
+
+                    String[] data = currentLine.split(",");
+                    if (data[0].equals(id + "")) {
+                        if (Float.parseFloat(data[1]) < bill) {
+                            return false;
+                        }
                     }
-                    return false;
+                    return true;
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

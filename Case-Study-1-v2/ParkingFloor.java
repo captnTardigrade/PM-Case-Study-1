@@ -25,8 +25,8 @@ public class ParkingFloor {
         }
     }
 
-    public void unblockFloor(String floorKey){
-        if (this.floorKey == floorKey){
+    public void unblockFloor(String floorKey) {
+        if (this.floorKey == floorKey) {
             this.isBlocked = false;
         }
     }
@@ -76,25 +76,24 @@ public class ParkingFloor {
     }
 
     void convertSpot(ParkingSpot parkingSpot, int numSplits, String vehicleType, String adminKey) {
-        if(parkingSpot.space%numSplits == 0){
-            if(parkingSpot.space == 4){
-                if(vehicleType.toLowerCase() ==  "car"){
-                    initializeCarSpots(parkingSpot.space/numSplits);
+        if (parkingSpot.space % numSplits == 0) {
+            if (parkingSpot.space == 4) {
+                if (vehicleType.toLowerCase() == "car") {
+                    initializeCarSpots(parkingSpot.space / numSplits);
                     parkingSpot.blockSpot(adminKey);
                 }
-                if(vehicleType.toLowerCase() == "bike"){
-                    initializeBikeSpots(parkingSpot.space/numSplits);
-                    parkingSpot.blockSpot(adminKey);
-                }
-            }
-            if(parkingSpot.space == 2){
-                if(vehicleType.toLowerCase() ==  "bike"){
-                    initializeBikeSpots(parkingSpot.space/numSplits);
+                if (vehicleType.toLowerCase() == "bike") {
+                    initializeBikeSpots(parkingSpot.space / numSplits);
                     parkingSpot.blockSpot(adminKey);
                 }
             }
-        }
-        else{
+            if (parkingSpot.space == 2) {
+                if (vehicleType.toLowerCase() == "bike") {
+                    initializeBikeSpots(parkingSpot.space / numSplits);
+                    parkingSpot.blockSpot(adminKey);
+                }
+            }
+        } else {
             System.out.println("The requested action cannot be performed.");
         }
     }

@@ -3,7 +3,22 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class ExitSystem {
-    private DisplayBoard exitDisplayBoard = new DisplayBoard();
+    protected DisplayBoard exitDisplayBoard = new DisplayBoard();
+
+    double calculateBill(ParkingSpot parkingSpot) {
+        long exit = System.currentTimeMillis();
+        Date exitTime = new Date((long) exit);
+        Date entryTime = new Date((long) parkingSpot.entryTime);
+        long diff = exitTime.getTime() - entryTime.getTime();
+        long diffHours = diff / (60 * 60 * 1000);
+        if (diffHours == 1) {
+            return parkingSpot.priceFactor[0];
+        } else if (diffHours == 2) {
+            return parkingSpot.priceFactor[0] + parkingSpot.priceFactor[1];
+        }
+
+        return parkingSpot.priceFactor[0] + parkingSpot.priceFactor[1] + (diffHours - 2) * parkingSpot.priceFactor[2];
+    }
 
     double calculateBill(EVSpot evSpot) {
         long exit = System.currentTimeMillis();
@@ -15,18 +30,7 @@ public class ExitSystem {
                 + evSpot.chargingPrices[0] + evSpot.chargingPrices[1] + evSpot.chargingPrices[2] * diffHours;
     }
 
-    double calculateBill(ParkingSpot parkingSpot) {
-        long exit = System.currentTimeMillis();
-        Date exitTime = new Date((long) exit);
-        Date entryTime = new Date((long) parkingSpot.entryTime);
-        System.out.println(entryTime);
-        System.out.println(exitTime);
-        long diff = exitTime.getTime() - entryTime.getTime();
-        long diffHours = diff / (60 * 60 * 1000);
-        return parkingSpot.priceFactor[0] + parkingSpot.priceFactor[1] + (diffHours - 2) * parkingSpot.priceFactor[2];
-    }
-
-    void makePayment(ParkingSpot parkingSpot) {
+    void makePayment(ParkingSpot parkingSpot) throws IOException {
         exitDisplayBoard.displayMessage("Your bill is: " + calculateBill(parkingSpot));
         exitDisplayBoard.displayMessage("Choose the mode of payment: \n1: Cash\n2: Card");
         Scanner scanner = new Scanner(System.in);
@@ -60,7 +64,7 @@ public class ExitSystem {
         }
     }
 
-    void makePayment(EVSpot evSpot) {
+    void makePayment(EVSpot evSpot) throws IOException {
         exitDisplayBoard.displayMessage("Your bill is: " + calculateBill(evSpot));
         exitDisplayBoard.displayMessage("Choose the mode of payment: \n1: Cash\n2: Card");
         Scanner scanner = new Scanner(System.in);
@@ -95,31 +99,28 @@ public class ExitSystem {
         }
     }
 
-    void deleteDetails(long id) {
-        String tempFile = "temp.txt";
+    void deleteDetails(long id) throws IOException {
+
+        String tempFile = "temp.csv";
         File oldFile = new File("CustomerData.csv");
         File newFile = new File(tempFile);
         String currentLine;
-        try {
-            FileWriter fw = new FileWriter(tempFile, true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter pw = new PrintWriter(bw);
+        FileReader fr;
 
-            FileReader fr = new FileReader("CustomerData.csv");
-            BufferedReader br = new BufferedReader(fr);
-
-            while ((currentLine = br.readLine()) != null) {
-                String[] data = currentLine.split(",");
-                if (!data[2].equals(id + "")) {
-                    pw.println(currentLine);
-                }
+        fr = new FileReader("./Bank.csv");
+        BufferedReader br = new BufferedReader(fr);
+        FileWriter fw;
+        fw = new FileWriter(tempFile, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        PrintWriter pw = new PrintWriter(bw);
+        while ((currentLine = br.readLine()) != null) {
+            String[] data = currentLine.split(",");
+            if (!data[0].equals(id + "")) {
+                pw.println(data[0] + "," + data[1]);
             }
-            oldFile.delete();
-            File dump = new File("CustomerData.csv");
-            newFile.renameTo(dump);
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        oldFile.delete();
+        File dump = new File("CustomerData.csv");
+        newFile.renameTo(dump);
     }
 }
