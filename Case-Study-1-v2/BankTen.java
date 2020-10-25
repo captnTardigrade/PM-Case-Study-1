@@ -8,7 +8,7 @@ interface Bank {
 
     boolean isValidCard(String cardNumber);
 
-    boolean hasEnoughBalance(String id, double bill);
+    boolean hasEnoughBalance(long id, double bill);
 }
 
 public class BankTen implements Bank {
@@ -24,7 +24,7 @@ public class BankTen implements Bank {
 
     @Override
     public boolean isValidCard(String cardNumber) {
-        String validCardPattern = "^4[0-9]{12}(?:[0-9]{3})?$^5[1-5][0-9]{14}$";
+        String validCardPattern = "^4[0-9]{12}(?:[0-9]{3})?$";
         Pattern pattern = Pattern.compile(validCardPattern);
         if (pattern.matcher(cardNumber).matches()) {
             return true;
@@ -33,19 +33,19 @@ public class BankTen implements Bank {
     }
 
     @Override
-    public boolean hasEnoughBalance(String id, double bill) {
+    public boolean hasEnoughBalance(long id, double bill) {
         boolean found = false;
         double balance = 0;
-        String ID;
+        long ID;
         Scanner scanner;
 
         try {
             scanner = new Scanner(new File("Bank.csv"));
             scanner.useDelimiter("[,\n]");
             while (scanner.hasNext() && !found) {
-                ID = scanner.next();
+                ID = scanner.nextLong();
                 balance = scanner.nextDouble();
-                if(ID.equals(id)){
+                if(ID == id){
                     if(balance>=bill){
                         return true;
                     }

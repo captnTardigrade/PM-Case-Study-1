@@ -10,6 +10,7 @@ public class ParkingSpot {
     ParkingSpot(int space, double[] priceFactor) {
         this.space = space;
         this.priceFactor = priceFactor;
+        this.entryTime = System.currentTimeMillis();
     }
 
     public void assignSpot(long id) {

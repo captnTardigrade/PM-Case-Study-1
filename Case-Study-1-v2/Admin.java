@@ -3,30 +3,37 @@ import java.util.Scanner;
 public class Admin {
     private String spotKey = "spotSecret";
     private String floorKey = "floorSecret";
-    private String masterKey;
-    public void setKey(String key){
+    private String masterKey = "topSecret";
+
+    public void setKey(String key) {
         System.out.println("Enter the previous key: ");
         Scanner scanner = new Scanner(System.in);
         String prevKey = scanner.nextLine();
-        if(prevKey == this.masterKey){
+        if (prevKey == this.masterKey) {
             this.masterKey = key;
             System.out.println("Updated the key successfully.");
-        }
-        else{
+        } else {
             System.out.println("Wrong security key. Please try again.");
         }
     }
-    public void blockSpot(ParkingSpot parkingSpot){
+
+    public void blockSpot(ParkingSpot parkingSpot) {
         parkingSpot.blockSpot(this.spotKey);
     }
 
-    public void unblockSpot(ParkingSpot parkingSpot){
+    public void unblockSpot(ParkingSpot parkingSpot) {
         parkingSpot.unblockSpot(spotKey);
     }
-    public void blockFloor(ParkingFloor parkingFloor){
+
+    public void blockFloor(ParkingFloor parkingFloor) {
         parkingFloor.blockFloor(floorKey);
     }
-    public void unblockFloor(ParkingFloor parkingFloor){
+
+    public void unblockFloor(ParkingFloor parkingFloor) {
         parkingFloor.unblockFloor(floorKey);
+    }
+    
+    public void initializeFloors(AssignmentSystem assignmentSystem){
+        assignmentSystem.initalizeFloors(masterKey);
     }
 }

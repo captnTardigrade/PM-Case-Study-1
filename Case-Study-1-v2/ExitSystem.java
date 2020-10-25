@@ -19,6 +19,8 @@ public class ExitSystem {
         long exit = System.currentTimeMillis();
         Date exitTime = new Date((long) exit);
         Date entryTime = new Date((long) parkingSpot.entryTime);
+        System.out.println(entryTime);
+        System.out.println(exitTime);
         long diff = exitTime.getTime() - entryTime.getTime();
         long diffHours = diff / (60 * 60 * 1000);
         return parkingSpot.priceFactor[0] + parkingSpot.priceFactor[1] + (diffHours - 2) * parkingSpot.priceFactor[2];
@@ -35,7 +37,7 @@ public class ExitSystem {
         }
         if (option == 2) {
             BankTen bankTen = new BankTen();
-            String id = parkingSpot.id + "";
+            long id = parkingSpot.id;
             exitDisplayBoard.displayMessage("Please swipe your card");
             String cardNumber = scanner.next();
             while (!bankTen.isValidCard(cardNumber)) {
@@ -69,7 +71,7 @@ public class ExitSystem {
         }
         if (option == 2) {
             BankTen bankTen = new BankTen();
-            String id = evSpot.id + "";
+            long id = evSpot.id;
             exitDisplayBoard.displayMessage("Please swipe your card");
             String cardNumber = scanner.next();
             while (!bankTen.isValidCard(cardNumber)) {
@@ -79,7 +81,8 @@ public class ExitSystem {
             exitDisplayBoard.displayMessage("Enter your PIN");
             scanner.next();
             while (!bankTen.isCorrectPIN()) {
-                exitDisplayBoard.displayMessage("Incorrect PIN");
+                exitDisplayBoard.displayMessage("Incorrect PIN. Please re-enter.");
+                scanner.next();
             }
             if (bankTen.hasEnoughBalance(id, calculateBill(evSpot))) {
                 exitDisplayBoard.displayMessage("Payment successful!");
